@@ -1,80 +1,119 @@
-# GSE: Tracker
+# <font color="#ff5252">IMPORTANT — CLEAN INSTALL REQUIRED</font>
 
-A World of Warcraft addon that provides a compact, configurable action tracker
-overlay for monitoring GSE (GnomeSequencer Enhanced) macro sequence execution.
+> <font color="#ff5252"><strong>BIG DISCLAIMER:</strong></font>  
+> Due to major structural and system changes in this version, a **clean reinstall is highly recommended**.
+>
+> Keeping old addon files or older saved settings may lead to:
+>
+> - broken settings
+> - misplaced UI elements
+> - outdated data conflicts
+> - unexpected behavior
+>
+> Please remove the previous **GSE: Tracker** folder before installing this version. Reset saved variables as well if you want the cleanest possible setup.
 
-## What It Does
+# [GSE: Tracker Addon](https://www.curseforge.com/wow/addons/gse-tracker)
 
-GSE: Tracker displays a real-time overlay showing which actions and abilities
-are being used by your GSE sequences as they fire. Designed for players who
-use GSE macros and want visual feedback on sequence execution without
-cluttering their main UI.
+**<font color="#4fc3f7">Action Tracker</font> | <font color="#81c784">Player Tracker</font> | <font color="#ffd54f">Assisted Highlight</font>**
 
-## Key Features
+Tracks spells triggered by sequences, with native integration for [GSE Addon](https://www.curseforge.com/wow/addons/gse-gnome-sequencer-enhanced-advanced-macros) when available. Compatible with **Single-Button Assistant** and **manual keypress** input.
 
-- Compact, movable overlay frame — drag it anywhere on screen
-- Tracks active GSE sequence execution in real time
-- Minimap button for quick access
-- Configurable display modes
-- Player tracking indicators
-- Assisted highlight for active abilities
-- Full options panel via the Blizzard Settings menu
-- Supports LibSharedMedia fonts
-- Persistent position and settings via SavedVariables
+---
 
-## Compatibility
+## <font color="#ffb74d">GSE Tracker</font>
 
-- **WoW version:** Midnight (retail)
-- **Interface:** 120001
-- **Required dependency:** GSE (GnomeSequencer Enhanced)
-- **Optional dependency:** LibSharedMedia-3.0
+**GSE: Tracker** gives you a cleaner and more customizable way to track sequence activity in combat, while also adding extra visual tools to improve awareness, positioning, and usability during gameplay.
 
-## Installation
+---
 
-### Manual
+## <font color="#64b5f6">Core Features</font>
 
-1. Download the latest release zip from the [Releases](../../releases) page
-2. Extract the `GSE_Tracker` folder into:
-   ```
-   World of Warcraft\_retail_\Interface\AddOns\
-   ```
-3. Launch WoW or type `/reload` in-game
+### <font color="#ffd54f">Assisted Highlight</font>
 
-### CurseForge / Wago
+A flexible **Assisted Highlight** system helps you keep visual focus where it matters most during combat.
 
-Install via your preferred addon manager.
+It can be used on:
 
-## Usage
+- **Nameplates**
+- **Screen space**
+- **Mouse cursor**
 
-The tracker frame appears automatically when GSE sequences are active.
-Use the minimap button to toggle visibility or open the options panel.
+This gives you multiple ways to display visual guidance depending on how you prefer to play.
 
-## Options
+### <font color="#81c784">Player Tracker</font>
 
-Open **Settings → AddOns → GSE: Tracker** to configure:
+A dedicated **Player Tracker** feature helps you track your character more easily during combat by showing a clear symbol in the center of the screen.
 
-- Display mode
-- Font and font size (via LibSharedMedia)
-- Frame scale and opacity
-- Indicator style
-- Player tracking options
+This makes it easier to keep awareness of your character's position during busy encounters, movement-heavy mechanics, and high-visual-combat moments.
 
-## Known Limitations
+### <font color="#4fc3f7">Fully Customizable Action Tracker</font>
 
-- Requires GSE to be installed and loaded — the tracker has no function
-  without active GSE sequences
-- Sequence detection depends on GSE's internal API; major GSE updates
-  may require compatibility updates
+The **Action Tracker** gives you independent control over its visual elements so you can tailor the tracker to your own layout and preferences.
 
-## Bug Reports
+- Enable or disable elements
+- Resizing
+- Independent movement
+- Precise X / Y positioning
+- Live visual adjustment while configuring
 
-Please open an issue on GitHub with:
+### <font color="#ba68c8">Settings Window + Live Previews</font>
 
-- A description of what happened vs. what you expected
-- Your WoW patch version
-- Your GSE version
-- Any error text from the WoW error frame or BugSack
+A dedicated configuration window lets you adjust the addon with **live previews**, making it easier to fine-tune visuals and positioning while you work.
 
-## License
+**Access:** `/gsetracker` or **minimap button**
 
-[MIT](LICENSE)
+### <font color="#90a4ae">Improved Tracker Positioning</font>
+
+The movement and positioning systems have been reworked for more precise placement, cleaner anchoring, and more reliable position persistence.
+
+### <font color="#ef5350">Performance Mode</font>
+
+Optional performance mode reduces rendering load by disabling certain visual effects and icon animations for players who prefer maximum FPS.
+
+### <font color="#b0bec5">Icon Border Customization</font>
+
+Icons support customizable borders with adjustable thickness, improving clarity and spell readability during combat for the **Action Tracker**, **Player Tracker**, and **Assisted Highlight**.
+
+### <font color="#9575cd">Sequence Activity Indicator</font>
+
+A visual indicator shows when a **GSE sequence is actively running**, with multiple selectable indicator shapes.
+
+### <font color="#4db6ac">Keybind Tracking</font>
+
+Displays the keybind used to trigger the active sequence so players can easily track inputs during gameplay, with support that also extends into **Assisted Highlight**.
+
+---
+
+## <font color="#64b5f6">Tracker Options</font>
+
+**Access:** `/gsetracker` + **minimap button**
+
+- **<font color="#4fc3f7">Action Tracker Options</font>**
+- **<font color="#81c784">Player Tracker Options</font>**
+- **<font color="#ffd54f">Assisted Highlight Options</font>**
+- **<font color="#ba68c8">Fonts</font>** — Sequence Font, Modifier Font, Keybinds _(SharedMedia supported)_
+- **<font color="#90a4ae">Open GSE Button</font>**
+- **<font color="#90a4ae">Open Sequence Editor</font>**
+- **<font color="#90a4ae">Reload</font>**
+
+---
+
+## <font color="#ffb74d">Feedback, Suggestions & Bug Reports</font>
+
+If you have **ideas, feedback, suggestions, or bug reports**, or want a better way to communicate and follow development, feel free to join my **Discord** linked on my profile.
+
+It's the best place for:
+
+- Clear back-and-forth communication
+- Tracking known issues and updates
+- Sharing ideas and experiments
+
+Everyone's welcome.
+
+---
+
+## <font color="#f06292">Support the Project (Optional)</font>
+
+If you enjoy **GSE: Tracker** and want to support ongoing development:
+
+[![Ko-fi Support Artseeker](https://img.shields.io/badge/Ko--fi-Support%20Artseeker-ff5e5b?style=for-the-badge&logo=kofi&logoColor=white)](https://ko-fi.com/artseeker) [![Patreon Support Artseeker](https://img.shields.io/badge/Patreon-Support%20Artseeker-f96854?style=for-the-badge&logo=patreon&logoColor=white)](https://www.patreon.com/Artseeker_) [![Discord GSE: Tracker Community](https://img.shields.io/badge/Discord-GSE%3A%20Tracker%20Community-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/vPYXyBgMBW)
