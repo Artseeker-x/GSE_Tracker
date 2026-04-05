@@ -1,0 +1,8 @@
+# Force LF line endings for files the packager reads on Linux
+.pkgmeta text eol=lf
+*.yml    text eol=lf
+*.yaml   text eol=lf
+*.lua    text eol=lf
+*.toc    text eol=lf
+*.md     text eol=lf
+*.xml    text eol=lf

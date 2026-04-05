@@ -1,0 +1,11 @@
+package-as: GSE_Tracker
+curse-id: 1445627
+manual-changelog: RELEASE_NOTES.md
+
+ignore:
+  - .claude
+  - .github
+  - .gitignore
+  - .gitattributes
+  - .pkgmeta
+  - RELEASE_NOTES.md

@@ -1,0 +1,127 @@
+local _, ns = ...
+local addon = ns
+local UI = ns.UI
+local API = (ns.Utils and ns.Utils.API) or {}
+local uiShared = addon._ui or {}
+
+local function HandleModifierStateChanged(_, _, key, state)
+  local ui = addon and addon.ui
+  if not ui then return end
+
+  local changed = uiShared.ApplyModifierEvent and uiShared.ApplyModifierEvent(ui, key, state)
+  if changed then
+    addon:UpdateModifiers()
+    if addon.RefreshDragMouseState then addon:RefreshDragMouseState() end
+  end
+end
+
+local function HandleCombatEvent(_, event)
+  local ui = addon and addon.ui
+  if not ui then return end
+
+  if event == "PLAYER_TARGET_CHANGED" then
+    addon:ApplyVisibility()
+    if addon.RefreshPlayerTracker then addon:RefreshPlayerTracker()
+    elseif addon.RefreshCombatMarker then addon:RefreshCombatMarker() end
+    return
+  end
+
+  if event == "PLAYER_REGEN_DISABLED" then
+    if ui._combatState == true then return end
+    ui._combatState = true
+    addon:RevealPendingSequenceText()
+    addon:ApplyVisibility()
+    if addon.RefreshDragMouseState then addon:RefreshDragMouseState() end
+    if addon.RefreshPlayerTracker then addon:RefreshPlayerTracker()
+    elseif addon.RefreshCombatMarker then addon:RefreshCombatMarker() end
+    return
+  end
+
+  if event == "PLAYER_REGEN_ENABLED" then
+    if ui._combatState == false then return end
+    ui._combatState = false
+    addon:ClearSpellHistory()
+    addon:SetSequenceText("")
+    -- Clear active sequence state so ApplyVisibility does not
+    -- re-resolve stale text from the GSE bridge.
+    addon._activeSeqKey = nil
+    addon._activeButtonName = nil
+    addon._gseActive = false
+    addon:ApplyVisibility()
+    if addon.RefreshDragMouseState then addon:RefreshDragMouseState() end
+    if addon.RefreshPlayerTracker then addon:RefreshPlayerTracker()
+    elseif addon.RefreshCombatMarker then addon:RefreshCombatMarker() end
+    return
+  end
+
+  if event == "PLAYER_ENTERING_WORLD" then
+    local newCombatState = API.InCombatLockdown() or false
+    local combatChanged = (ui._combatState ~= newCombatState)
+    local needsTargetVisibilityRefresh = addon.VisibilityDependsOnTarget and addon:VisibilityDependsOnTarget() or false
+    ui._combatState = newCombatState
+    if uiShared.SyncModifiers then
+      local changed = uiShared.SyncModifiers(ui)
+      addon:UpdateModifiers(changed)
+    end
+    if addon.RefreshDragMouseState then addon:RefreshDragMouseState() end
+    if combatChanged or ui._lastVisible == nil or needsTargetVisibilityRefresh then
+      addon:ApplyVisibility()
+    end
+    if addon.RefreshPlayerTracker then addon:RefreshPlayerTracker()
+    elseif addon.RefreshCombatMarker then addon:RefreshCombatMarker() end
+  end
+end
+
+function UI:RegisterModifierEvents(ui)
+  if not ui then return end
+
+  if not ui.modEvents then
+    ui.modEvents = API.CreateFrame("Frame")
+  else
+    ui.modEvents:UnregisterAllEvents()
+  end
+
+  API.SafeRegisterEvent(ui.modEvents, "MODIFIER_STATE_CHANGED")
+  ui.modEvents:SetScript("OnEvent", HandleModifierStateChanged)
+
+  if uiShared.SyncModifiers then
+    uiShared.SyncModifiers(ui)
+  end
+  if addon.RefreshDragMouseState then addon:RefreshDragMouseState() end
+end
+
+function UI:UpdateEventSubscriptions(ui)
+  ui = ui or self.ui
+  if not (ui and ui.combatEvents) then return end
+
+  local needsTargetEvent = false
+  if self.VisibilityDependsOnTarget then
+    needsTargetEvent = self:VisibilityDependsOnTarget() and true or false
+  end
+
+  if ui._targetEventRegistered ~= needsTargetEvent then
+    ui._targetEventRegistered = needsTargetEvent
+    if needsTargetEvent then
+      API.SafeRegisterEvent(ui.combatEvents, "PLAYER_TARGET_CHANGED")
+    else
+      ui.combatEvents:UnregisterEvent("PLAYER_TARGET_CHANGED")
+    end
+  end
+end
+
+function UI:RegisterCombatEvents(ui)
+  if not ui then return end
+
+  if not ui.combatEvents then
+    ui.combatEvents = API.CreateFrame("Frame")
+  else
+    ui.combatEvents:UnregisterAllEvents()
+  end
+
+  API.SafeRegisterEvent(ui.combatEvents, "PLAYER_REGEN_DISABLED")
+  API.SafeRegisterEvent(ui.combatEvents, "PLAYER_REGEN_ENABLED")
+  API.SafeRegisterEvent(ui.combatEvents, "PLAYER_ENTERING_WORLD")
+  self:UpdateEventSubscriptions(ui)
+
+  ui.combatEvents:SetScript("OnEvent", HandleCombatEvent)
+end
