@@ -491,8 +491,6 @@ local function SetupGlowHook(provider)
     MarkAssistedHighlightDirty("GlowHide")
   end
 
-  -- API.SafeHooksecurefunc wraps hooksecurefunc in pcall, so if either global
-  -- function does not exist the hook silently fails without an error.
   API.SafeHooksecurefunc("ActionButton_ShowOverlayGlow", OnGlowShow)
   API.SafeHooksecurefunc("ActionButton_HideOverlayGlow", OnGlowHide)
 end

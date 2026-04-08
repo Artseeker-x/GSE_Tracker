@@ -400,9 +400,8 @@ NormalizeAssistedHighlightAnchorTarget = function(value)
 end
 
 GetAssistedHighlightAnchorPointModel = function(value)
-  -- Assisted Highlight point selection is now owned by the anchor model.
   -- Screen always resolves through CENTER; non-screen anchor modes resolve their
-  -- effective frame/icon points here instead of inheriting stale user-selected data.
+  -- effective frame/icon points here rather than inheriting stale user-selected data.
   local target = NormalizeAssistedHighlightAnchorTarget(value)
   if target == "Mouse Cursor" then
     return C.ANCHOR_CENTER or "CENTER", "Mouse Cursor", C.ANCHOR_CENTER or "CENTER"

@@ -3,9 +3,6 @@ local addon = ns
 local Utils = ns.Utils
 local C = Utils.Constants or addon.Constants or {}
 
--- LibSharedMedia font support. Users can extend the list through LSM packs,
--- but the addon keeps working with Blizzard defaults on its own.
-
 local LSM = _G.LibStub and _G.LibStub:GetLibrary("LibSharedMedia-3.0", true)
 addon.LSM = LSM
 Utils.LSM = LSM
@@ -65,7 +62,6 @@ local function IsLegacyKey(v)
 end
 
 function Utils:NormalizeFontName(fontName, fallbackName)
-  -- Convert legacy key -> name
   if IsLegacyKey(fontName) then
     fontName = LEGACY_KEY_TO_LSM_NAME[fontName]
   end
@@ -102,7 +98,6 @@ function Utils:GetFontPathByName(fontName)
 end
 
 function Utils:GetFontDropdownList()
-  -- Returns a sorted array of font names.
   if self.LSM then
     local names = self.LSM:List("font")
     if type(names) == "table" and #names > 0 then
@@ -111,7 +106,6 @@ function Utils:GetFontDropdownList()
     end
   end
 
-  -- Fallback list (minimal)
   return {
     C.FONT_FRIZ or "Friz Quadrata TT",
     C.FONT_ARIAL_NARROW or "Arial Narrow",

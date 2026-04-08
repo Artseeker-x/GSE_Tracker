@@ -235,7 +235,6 @@ local function ResolveActionTrackerCenteredOffsets(self)
     return rawX, rawY
   end
 
-  -- Legacy non-canonical anchor: convert to CENTER/UIParent/CENTER once.
   if not ui then
     return rawX, rawY
   end
@@ -258,7 +257,6 @@ function UI:GetActionTrackerOffset()
   if IsCanonicalActionTrackerPoint(point, relName, relPoint) then
     return rawX, rawY
   end
-  -- Non-canonical legacy path: compute equivalent offset without persisting.
   if not self.ui then return rawX, rawY end
   local anchor = (_G[relName] or UIParent)
   SetFramePointIfChanged(self.ui, point, anchor, relPoint, rawX, rawY)

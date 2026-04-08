@@ -6,7 +6,7 @@
 
 **<font color="#4fc3f7">Action Tracker</font> &nbsp;·&nbsp; <font color="#81c784">Player Tracker</font> &nbsp;·&nbsp; <font color="#ffd54f">Assisted Highlight</font>**
 
-[![Version](https://img.shields.io/badge/Version-1.1.3-4fc3f7?style=for-the-badge&logoColor=white)](https://github.com/Artseeker-x/GSE_Tracker/releases)
+[![Version](https://img.shields.io/badge/Version-1.1.4-4fc3f7?style=for-the-badge&logoColor=white)](https://github.com/Artseeker-x/GSE_Tracker/releases)
 [![WoW](https://img.shields.io/badge/WoW-Midnight-00b4d8?style=for-the-badge)](https://www.curseforge.com/wow/addons/gse-tracker)
 [![License](https://img.shields.io/badge/License-MIT-ffd54f?style=for-the-badge)](LICENSE)
 [![CurseForge](https://img.shields.io/badge/CurseForge-Download-f16436?style=for-the-badge&logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/gse-tracker)

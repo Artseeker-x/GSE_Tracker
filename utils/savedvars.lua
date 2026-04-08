@@ -9,7 +9,7 @@ local C = Utils.Constants or addon.Constants or {}
 
 SV.SCHEMA_VERSION = C.SCHEMA_VERSION or 3
 SV.DB_NAME = C.DB_NAME or "GSETrackerDB"
-SV.ADDON_VERSION = C.ADDON_VERSION or "1.1.3"
+SV.ADDON_VERSION = C.ADDON_VERSION or "1.1.4"
 local ACTION_TRACKER_POSITION_LIMIT = tonumber(C.ACTION_TRACKER_POSITION_LIMIT) or 3000
 
 -- The highest migration version actually implemented in this file.

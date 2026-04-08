@@ -55,15 +55,6 @@ local buildSettingsRefresh = optionsModule.BuildSettingsRefresh
 local buildTopTabs = optionsModule.BuildTopTabs
 local applyTopTabSelection = optionsModule.ApplyTopTabSelection
 
--- ---------------------------------------------------------------------------
--- WireAssistedHighlightCallbacks
--- Wires all PlayerTracker slider callbacks and all AssistedHighlight callbacks.
--- Extracted from InitOptions to reduce closure size.
---   C   = flat table of control widget references
---   ctx = { IsRefreshing, ensureDB, ApplyEffect, clamp, setSlider, setDD,
---           bindNumeric, bindFloat, bindOffset, SetAH, SetCM }
---   fontNames = font name list or provider function
--- ---------------------------------------------------------------------------
 local function WireAssistedHighlightCallbacks(C, ctx, fontNames)
 
   C.frame.UpdateAssistedHighlightColorButton = function(_, r, g, b)
@@ -258,8 +249,6 @@ local function WireAssistedHighlightCallbacks(C, ctx, fontNames)
       ctx.ApplyEffect("playerTracker")
     end,
     0, 8)
-
-  -- Assisted Highlight checkbox and slider callbacks
 
   C.cbAssistedHighlightEnabled:SetScript("OnClick", function()
     ctx.ensureDB()
@@ -542,7 +531,6 @@ function Options:InitOptions()
       return value
     end
 
-    -- Keep the class identity, but lift it slightly so the footer value stays vivid.
     local function brighten(value)
       value = clamp01(value)
       return math.min(1, value + ((1 - value) * 0.18))
@@ -670,7 +658,7 @@ function Options:InitOptions()
   sidebarVersion:SetTextColor(0.84, 0.86, 0.91, 1)
   sidebarVersion:SetAlpha(1)
   do
-    local versionText = (API.GetAddOnMetadata and API.GetAddOnMetadata(addon.name, "Version")) or (Constants.ADDON_VERSION or "1.1.3")
+    local versionText = (API.GetAddOnMetadata and API.GetAddOnMetadata(addon.name, "Version")) or (Constants.ADDON_VERSION or "1.1.4")
     local versionColor = ToColorHex(classR, classG, classB)
     sidebarVersion:SetText(("Version: |cFF%s%s|r"):format(versionColor, tostring(versionText)))
   end
@@ -1344,9 +1332,14 @@ function Options:InitOptions()
     end
   end
 
+  local _ahControlsSig = nil
   local function SetAssistedHighlightControlsEnabled(enabled)
     enabled = enabled and true or false
     local locked = addon:GetAssistedHighlightLocked()
+    local colorEnabled = enabled and (not addon:GetAssistedHighlightUseClassColor())
+    local sig = (enabled and 4 or 0) + (locked and 2 or 0) + (colorEnabled and 1 or 0)
+    if _ahControlsSig == sig then return end
+    _ahControlsSig = sig
     local alpha = enabled and 1 or 0.5
     for _, slider in ipairs({ sAssistedHighlightSize, sAssistedHighlightBorder, sAssistedHighlightAlpha, sAssistedHighlightKeybindX, sAssistedHighlightKeybindY, sAssistedHighlightFontSize }) do
       if slider then
@@ -1368,7 +1361,6 @@ function Options:InitOptions()
     for _, dd in ipairs({ ddAssistedHighlightShowWhen, ddAssistedHighlightFont, ddAssistedHighlightAnchorTarget }) do
       setDropdownEnabled(dd, enabled, alpha)
     end
-    local colorEnabled = enabled and (not addon:GetAssistedHighlightUseClassColor())
     if btnAssistedHighlightColor then
       btnAssistedHighlightColor:SetEnabled(colorEnabled)
       btnAssistedHighlightColor:SetAlpha(colorEnabled and 1 or 0.5)
@@ -1462,8 +1454,14 @@ function Options:InitOptions()
     end
   end
 
+  local _cmControlsSig = nil
   local function SetCombatMarkerControlsEnabled(enabled)
+    enabled = enabled and true or false
     local locked = addon.GetCombatMarkerLocked and addon:GetCombatMarkerLocked() or false
+    local colorEnabled = enabled and (not addon:GetCombatMarkerUseClassColor())
+    local sig = (enabled and 4 or 0) + (locked and 2 or 0) + (colorEnabled and 1 or 0)
+    if _cmControlsSig == sig then return end
+    _cmControlsSig = sig
     for _, slider in ipairs({ sCombatMarkerSize, sCombatMarkerThickness, sCombatMarkerBorderSize, sCombatMarkerAlpha }) do
       if slider then
         SetSliderInteractivity(slider, enabled, enabled and 1 or 0.5)
@@ -1484,7 +1482,6 @@ function Options:InitOptions()
         cb:SetAlpha(enabled and 1 or 0.5)
       end
     end
-    local colorEnabled = enabled and (not addon:GetCombatMarkerUseClassColor())
     if btnCombatMarkerColor then
       btnCombatMarkerColor:SetEnabled(colorEnabled)
       btnCombatMarkerColor:SetAlpha(colorEnabled and 1 or 0.5)
@@ -2090,7 +2087,9 @@ function Options:InitOptions()
 
   local function syncSliderControl(slider, value)
     if not slider then return end
-    slider:SetValue(value)
+    if slider:GetValue() ~= value then
+      slider:SetValue(value)
+    end
     if slider.inputBox and not slider.inputBox:HasFocus() then
       setSliderBoxValue(slider, value)
     end
@@ -2185,22 +2184,10 @@ function Options:InitOptions()
       frame:UpdateCombatMarkerColorButton(r, g, b)
     end
     local mx, my = addon:GetCombatMarkerOffset()
-    if sCombatMarkerX then
-      sCombatMarkerX:SetValue(mx)
-      setSliderBoxValue(sCombatMarkerX, mx)
-    end
-    if sCombatMarkerY then
-      sCombatMarkerY:SetValue(my)
-      setSliderBoxValue(sCombatMarkerY, my)
-    end
-    if sCombatMarkerThickness then
-      sCombatMarkerThickness:SetValue(addon:GetCombatMarkerThickness())
-      setSliderBoxValue(sCombatMarkerThickness, addon:GetCombatMarkerThickness())
-    end
-    if sCombatMarkerBorderSize then
-      sCombatMarkerBorderSize:SetValue(addon:GetCombatMarkerBorderSize())
-      setSliderBoxValue(sCombatMarkerBorderSize, addon:GetCombatMarkerBorderSize())
-    end
+    syncSliderControl(sCombatMarkerX, mx)
+    syncSliderControl(sCombatMarkerY, my)
+    syncSliderControl(sCombatMarkerThickness, addon:GetCombatMarkerThickness())
+    syncSliderControl(sCombatMarkerBorderSize, addon:GetCombatMarkerBorderSize())
     if cbCombatMarkerBorder then
       cbCombatMarkerBorder:SetChecked(addon:GetCombatMarkerBorderSize() > 0)
     end
