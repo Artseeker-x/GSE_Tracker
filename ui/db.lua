@@ -315,6 +315,19 @@ function Utils:SetMinimapAngle(value)
   PersistRuntimeChange(db)
 end
 
+function Utils:GetMinimapHidden()
+  local db = GetRuntimeDB()
+  local minimap = EnsureTable(db, "minimap")
+  return minimap.hidden == true
+end
+
+function Utils:SetMinimapHidden(value)
+  local db = GetRuntimeDB()
+  local minimap = EnsureTable(db, "minimap")
+  minimap.hidden = value == true or nil
+  PersistRuntimeChange(db)
+end
+
 
 local NormalizeAssistedHighlightPointName
 local NormalizeAssistedHighlightAnchorTarget

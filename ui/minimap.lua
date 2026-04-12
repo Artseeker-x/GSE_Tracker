@@ -11,7 +11,7 @@ local ICON_SIZE = 20
 local BACKGROUND_SIZE = 20
 local BORDER_SIZE = 53
 local DEFAULT_ANGLE = 225
-local DRAG_BUTTON = "RightButton"
+local DRAG_BUTTON = "LeftButton"
 local TOOLTIP_TITLE_FALLBACK = (C.ADDON_DISPLAY_NAME or "|cFFFFFFFFGS|r|cFF00FFFFE:|r|cFFFFFF00 Tracker|r")
 local ICON_MASK = C.MASK_CIRCLE or "Interface\\CharacterFrame\\TempPortraitAlphaMask"
 local MINIMAP_SHAPES = {
@@ -147,7 +147,8 @@ local function UpdateTooltip(button)
   GameTooltip:SetOwner(button, "ANCHOR_LEFT")
   GameTooltip:SetText(title)
   GameTooltip:AddLine("Left Click: |cffffff00Open settings|r", 0.85, 0.85, 0.85)
-  GameTooltip:AddLine("Right Drag: |cffffff00Move button|r", 0.85, 0.85, 0.85)
+  GameTooltip:AddLine("Left Drag: |cffffff00Move button|r", 0.85, 0.85, 0.85)
+  GameTooltip:AddLine("Right Click: |cffffff00Hide button|r", 0.85, 0.85, 0.85)
   GameTooltip:Show()
 end
 
@@ -180,6 +181,10 @@ function UI:RefreshMinimapButton()
     button = self.minimapButton
   end
   if not button then return end
+  if addon.GetMinimapHidden and addon:GetMinimapHidden() then
+    button:Hide()
+    return
+  end
   ApplyPosition(button, GetSavedAngle())
   button:Show()
 end
@@ -201,7 +206,7 @@ function UI:EnsureMinimapButton()
     button:SetFrameLevel((minimap:GetFrameLevel() or 0) + 8)
     button:SetHighlightTexture("Interface\\Minimap\\UI-Minimap-ZoomButton-Highlight", "ADD")
     button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
-    button:RegisterForDrag(DRAG_BUTTON)
+    button:RegisterForDrag(DRAG_BUTTON)  -- LeftButton: WoW fires OnDragStart on move, OnClick on clean release (mutually exclusive)
 
     local background = button:CreateTexture(nil, "BACKGROUND")
     background:SetSize(BACKGROUND_SIZE, BACKGROUND_SIZE)
@@ -233,12 +238,19 @@ function UI:EnsureMinimapButton()
     border:SetTexture("Interface\\Minimap\\MiniMap-TrackingBorder")
     button.border = border
 
-    button:SetScript("OnClick", function(_, mouseButton)
-      if mouseButton ~= "LeftButton" then return end
-      if addon.OpenSettingsWindow then
-        addon:OpenSettingsWindow()
-      elseif addon.ToggleSettingsWindow then
-        addon:ToggleSettingsWindow()
+    button:SetScript("OnClick", function(selfButton, mouseButton)
+      if mouseButton == "LeftButton" then
+        if addon.OpenSettingsWindow then
+          addon:OpenSettingsWindow()
+        elseif addon.ToggleSettingsWindow then
+          addon:ToggleSettingsWindow()
+        end
+      elseif mouseButton == "RightButton" then
+        if addon.SetMinimapHidden then
+          addon:SetMinimapHidden(true)
+        end
+        if GameTooltip then GameTooltip:Hide() end
+        selfButton:Hide()
       end
     end)
 

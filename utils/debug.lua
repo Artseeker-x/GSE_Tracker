@@ -105,6 +105,17 @@ function DebugModule:HandleSlashCommand(msg)
     return
   end
 
+  if msg == "minimap" then
+    if ns.SetMinimapHidden then
+      ns:SetMinimapHidden(false)
+    end
+    if ns.UI and ns.UI.RefreshMinimapButton then
+      ns.UI:RefreshMinimapButton()
+    end
+    PrintChat("Minimap button shown.")
+    return
+  end
+
   if ns.ToggleSettingsWindow then
     ns:ToggleSettingsWindow()
   end
